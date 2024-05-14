@@ -19,3 +19,56 @@ model Sample {
 
   @@map("samples") // if you want to use snake_case format
 }
+
+enum EventCategory {
+  Festival
+  Konser
+  Pertandingan
+  Pameran
+  Workshop
+  Pertunjukan
+  Seminar
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  username         String     @unique
+  email            String     @unique
+  password         String
+  profileImg       String?
+  userToken        String
+  isEventOrganizer Boolean    @default(false)
+  referralCode     String?    @unique
+  createdAt        DateTime   @default(now())
+  UserPoint        UserPoint?
+}
+
+model UserPoint {
+  id           Int      @id @default(autoincrement())
+  currentPoint Int // ??? hapus aja
+  amount       Int // total point punya kita. kayaknya cukup amount aja, currentPoint enggak perlu karena keduanya sama aja.
+  createdPoint DateTime @default(now()) // date kapan seseorang menggunakan referral code punya kita
+  expiredPoint DateTime @default(now()) // ini berarti customnya di front-end nya. expired 3 bulan dari createdPoint nya
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id                  Int           @id @default(autoincrement())
+  eventTitle          String
+  eventDate           DateTime // perlu dipertimbangkan lagi apakah ada startEvent dan endEvent nya atau enggak
+  eventImage          String
+  eventCategory       EventCategory
+  eventLocation       String
+  eventSlug           String 
+  contactPerson       String
+  contactPersonNumber String
+  eventOrganizerImg   String
+  eventOrganizerName  String
+  description         String
+  availableSeats      Int
+  eventPrice          Int
+  isPaid              Boolean       @default(false)
+}
