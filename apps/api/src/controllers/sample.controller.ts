@@ -1,34 +1,37 @@
-import { Request, Response } from 'express';
-import prisma from '@/prisma';
+// import { Request, Response } from 'express';
+// import prisma from '@/prisma';
 
-export class SampleController {
-  async getSampleData(req: Request, res: Response) {
-    const sampleData = await prisma.sample.findMany();
+// export class SampleController {
+//   async getSampleData(req: Request, res: Response) {
+//     const sampleData = await prisma.sample.findMany();
 
-    return res.status(200).send(sampleData);
-  }
+//     return res.status(200).send(sampleData);
+//   }
 
-  async getSampleDataById(req: Request, res: Response) {
-    const { id } = req.params;
+//   // ================================
 
-    const sample = await prisma.sample.findUnique({
-      where: { id: Number(id) },
-    });
+//   async getSampleDataById(req: Request, res: Response) {
+//     const { id } = req.params;
 
-    if (!sample) {
-      return res.send(404);
-    }
+//     const sample = await prisma.sample.findUnique({
+//       where: { id: Number(id) },
+//     });
 
-    return res.status(200).send(sample);
-  }
+//     if (!sample) {
+//       return res.send(404);
+//     }
 
-  async createSampleData(req: Request, res: Response) {
-    const { name, code } = req.body;
+//     return res.status(200).send(sample);
+//   }
+//   // ========================================
 
-    const newSampleData = await prisma.sample.create({
-      data: { name, code },
-    });
+//   async createSampleData(req: Request, res: Response) {
+//     const { name, code } = req.body;
 
-    return res.status(201).send(newSampleData);
-  }
-}
+//     const newSampleData = await prisma.sample.create({
+//       data: { name, code },
+//     });
+
+//     return res.status(201).send(newSampleData);
+//   }
+// }
