@@ -30,6 +30,7 @@ enum EventCategory {
   Seminar
 }
 
+
 enum PointStatus {
   Active
   Expired
@@ -62,6 +63,7 @@ model User {
   email            String     @unique
   password         String
   profileImg       String?
+
   // userToken        String?
   usedReferralCode String? //referral code orang lain yang digunakan ketika register
   isActive         Boolean    @default(false)
