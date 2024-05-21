@@ -19,3 +19,217 @@ model Sample {
 
   @@map("samples") // if you want to use snake_case format
 }
+
+enum EventCategory {
+  Festival
+  Konser
+  Pertandingan
+  Pameran
+  Workshop
+  Pertunjukan
+  Seminar
+}
+
+enum PointStatus {
+  Active
+  Expired
+}
+
+enum DiscountStatus {
+  Active
+  Expired
+}
+
+enum OrderStatus {
+  Pending
+  WaitingConfirmation
+  Paid
+  Cancel
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+}
+
+//belum di migrate lagi!! awokwowkwok udaahh
+// one to one
+model User {
+  id               Int        @id @default(autoincrement())
+  fullName         String
+  username         String     @unique
+  email            String     @unique
+  password         String
+  profileImg       String?
+  // userToken        String?
+  usedReferralCode String? //referral code orang lain yang digunakan ketika register
+  isActive         Boolean    @default(false)
+  isEventOrganizer Boolean    @default(false)
+  createdAt        DateTime   @default(now())
+  Points           Points[]
+  Event            Event[] // nama penyelenggara event tuh ntar sesuai dengan nama profile si user
+  referral         String?     @unique
+  Discount         Discount[]
+  Cart             Cart?
+  Order            Order[]
+  Review           Review[]
+  // currentPoint     Int //point yg dimiliki saat ini (user) 
+  // referralCode     String?           @unique
+  // isOrganizer      Boolean           @default(false)
+  // Payment          Payment[]
+}
+
+model Points {
+  id           Int         @id @default(autoincrement())
+  userId       Int // transaksi ini dimiliki oleh siapa
+  currentPoint Int //adalah poin saat ini, sebelum ada rewards atau sebelum ada redeem
+  createdDate  DateTime    @default(now())
+  expiredDate  DateTime    @default(now())
+  amount       Int
+  pointStatus  PointStatus
+  User         User        @relation(fields: [userId], references: [id])
+  Order        Order[]
+  // amount           Int
+  // eventId          Int? // event mana yang menggunakan user point untuk mendapatkan potongan harga
+  // referralId       Int? //referral code mana yg digunakan untuk mendapatkan poin reward
+}
+
+model Discount {
+  id              Int            @id @default(autoincrement())
+  userId          Int
+  currentDiscount Int
+  createdDate     DateTime       @default(now())
+  expiredDate     DateTime
+  discountStatus  DiscountStatus
+  user            User           @relation(fields: [userId], references: [id])
+  Order           Order[]
+  // discountPercentage Int
+  // createdAt          DateTime       @default(now())
+  // Payment            Payment[]
+  // User               User           @relation(fields: [userId], references: [id])
+}
+
+// model Referral {
+//   id           Int      @id @default(autoincrement())
+//   userId       Int      @unique
+//   referralCode String   @unique
+//   createdDate  DateTime @default(now())
+//   user         User     @relation(fields: [userId], references: [id])
+// }
+
+model Event {
+  id                Int           @id @default(autoincrement())
+  userId            Int
+  eventTitle        String        @unique // judul event
+  startDate         DateTime // tanggal event
+  endDate           DateTime
+  eventImage        String        @db.LongText
+  eventCategory     EventCategory
+  eventLocation     String
+  eventSlug         String        @unique
+  cpName            String
+  cpNumber          String
+  description       String
+  eventOrganizerImg String        @db.LongText
+  user              User          @relation(fields: [userId], references: [id])
+  Tiket             Tiket[]
+  CartItem          CartItem[]
+  OrderItem         OrderItem[]
+  Review            Review[]
+  // eventOrganizerName String        @unique
+  // availableSeat      Int           @default(0) // ini klo war tiket smpe brp
+  // price              Int //harga tiket berapa
+  // isPaid             Boolean       @default(false)
+}
+
+model Tiket {
+  id            Int         @id @default(autoincrement())
+  eventId       Int
+  ticketName    String
+  isPaid        Boolean     @default(false)
+  availableSeat Int
+  ticketPrice   Int
+  startSaleDate DateTime
+  endSaleDate   DateTime
+  event         Event       @relation(fields: [eventId], references: [id])
+  PromoTiket    PromoTiket?
+}
+
+model PromoTiket {
+  id            Int      @id @default(autoincrement())
+  tiketId       Int      @unique
+  promoName     String
+  promoDiscount Int
+  createdAt     DateTime @default(now())
+  expiredAt     DateTime
+  tiket         Tiket    @relation(fields: [tiketId], references: [id])
+}
+
+model Cart {
+  id       Int        @id @default(autoincrement())
+  userId   Int        @unique
+  user     User       @relation(fields: [userId], references: [id])
+  CartItem CartItem[]
+}
+
+model CartItem {
+  id       Int   @id @default(autoincrement())
+  cartId   Int
+  eventId  Int
+  quantity Int
+  cart     Cart  @relation(fields: [cartId], references: [id])
+  event    Event @relation(fields: [eventId], references: [id])
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  amount      Float
+  discountId  Int?
+  pointsId    Int?
+  status      OrderStatus
+  orderDate   DateTime    @default(now())
+  expiredDate DateTime    @default(now()) // ini tuh expired pembayarannya
+  user        User        @relation(fields: [userId], references: [id])
+  discount    Discount?   @relation(fields: [discountId], references: [id])
+  points      Points?     @relation(fields: [pointsId], references: [id])
+  orderItem   OrderItem[]
+  payment     Payment[]
+  // total       Int
+  // status      StatusOrder
+}
+
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  orderId  Int
+  eventId  Int
+  quantity Int
+  order    Order @relation(fields: [orderId], references: [id])
+  event    Event @relation(fields: [eventId], references: [id])
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  orderId       Int           @unique
+  amount        Float
+  paymentStatus PaymentStatus
+  createdAt     DateTime      @default(now())
+  order         Order         @relation(fields: [orderId], references: [id])
+  // orderEventId    Int              @unique //event apa yg dipesen
+  // discountId      Int              @unique
+  // price           Int // harga user memesan event tersebut
+  // DiscountVoucher DiscountVoucher? @relation(fields: [discountId], references: [id])
+  // User            User             @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  eventId   Int
+  rating    Float
+  comment   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+}
