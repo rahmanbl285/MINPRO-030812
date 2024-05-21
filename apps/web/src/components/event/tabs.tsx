@@ -1,8 +1,11 @@
 'use client'
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Ticket from "./ticket";
+import { IEvent } from "@/types/event";
+import { getEvent, getEventSlug } from "@/lib/event";
+import Description from "./description";
 
 interface TabsEventProps {
     onCountChange: (count: number) => void;
@@ -32,7 +35,8 @@ export default function TabsEvent({ onCountChange }: TabsEventProps) {
               <div className="flex flex-col gap-2">
                 {/* Konten untuk deskripsi */}
                 <h6 className="font-bold text-lg">EVENT DESCRIPTION</h6>
-                <p className=" text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error delectus voluptatum explicabo maxime modi asperiores facilis, provident similique quae tempore reprehenderit aspernatur veniam. Beatae, ducimus reiciendis. Magni earum laboriosam sunt!</p>
+                <p className=" text-justify">description pokoknya</p>
+  
               </div>
             )}
             {activeTab === "tiket" && (

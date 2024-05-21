@@ -28,8 +28,8 @@ export class UserController {
             // Referral
             let createdUser
             if (referall !== undefined && referall !== null && referall !== '') {
-                const reffUser = await prisma.referral.findUnique({
-                    where: { referralCode: referall.toLowerCase() } // Convert to lowercase
+                const reffUser = await prisma.user.findUnique({
+                    where: { referral: referall.toLowerCase() } // Convert to lowercase
                 })
 
                 if (!reffUser) throw "Wrong referral code"

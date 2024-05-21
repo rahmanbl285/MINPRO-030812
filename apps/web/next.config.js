@@ -7,8 +7,19 @@ const nextConfig = {
             "www.summarecon.com",
             "pbs.twimg.com",
             "s3-ap-southeast-1.amazonaws.com",
-            "images.unsplash.com"
-        ]
+            "images.unsplash.com",
+            "localhost"
+        ],
+        remotePatterns: [
+            //   {
+            //     protocol: "https",
+            //     hostname: "**",
+            //   },
+              {
+                protocol: "http",
+                hostname: "**",
+              },
+            ],
     }
 }
 

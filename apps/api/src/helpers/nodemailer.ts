@@ -5,7 +5,5 @@ service: "gmail",
 auth: {
     user : process.env.MAIL_USER,
     pass : process.env.MAIL_PASS
-    // user: "gabythaliaa17@gmail.com",
-    // pass: "amzx jsls udzo bbhm"
 }
 })

@@ -1,4 +1,5 @@
 export default function AccordionFilter() {
+  
   return (
     <div className="flex flex-col">
       <div className="collapse collapse-arrow">

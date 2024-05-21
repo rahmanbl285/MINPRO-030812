@@ -1,94 +1,28 @@
+'use client'
+
+import { useEffect, useState } from 'react';
 import CardSeeMore from '../template/cardSeeMore';
-import CardTemplate from '../template/cardTemplate';
+import {CardTemplate} from '../template/cardTemplate';
 import DropdownLocation from './ddLocation';
+import { iCardTemplate } from '@/types/cardTemplate';
+import { getEvent } from '@/lib/event';
 
 export default function CategoryLocation() {
-  const byLocation = [
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-    {
-      imgEvent:
-        'https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20240405213040_66100b10221fb.jpg',
-      title: 'Gedebage Jazz Festival',
-      date: '11 May - 12 May 2024',
-      price: 149000,
-      imgUser:
-        'https://pbs.twimg.com/profile_images/1203987594205265921/Li0FoEiP_400x400.jpg',
-      nameUser: 'Summarecon Mall Bandung',
-      linkEvent: '/jelajah',
-      linkProfile: '/dashboard',
-    },
-  ];
+  const [product, setProduct] = useState<iCardTemplate[]>([])
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const data = await getEvent()
+        setProduct(data.event)
+        console.log(data.event)
+      } catch (err) {
+        console.error('Error fetching events:', err);
+      }
+    }
+    fetchEvents()
+  },[])
+
 
   return (
     <div className="flex flex-col">
@@ -98,17 +32,8 @@ export default function CategoryLocation() {
       </div>
 
       <div className="flex my-5 overflow-x-scroll gap-5">
-        {byLocation.map((item, idx) => (
-          <CardTemplate key={idx}
-            imgEvent={item.imgEvent}
-            title={item.title}
-            date={item.date}
-            price={item.price}
-            imgUser={item.imgUser}
-            nameUser={item.nameUser}
-            linkEvent={item.linkEvent}
-            linkProfile={item.linkProfile}
-          />
+      {product.map((event) => (
+            <CardTemplate key={event.id} event={event}/>
           ))}
           <CardSeeMore />
       </div>

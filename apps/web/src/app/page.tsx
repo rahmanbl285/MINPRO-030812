@@ -16,10 +16,4 @@ export default function Home() {
       <SeeMoreButton />
     </div>
   );
-    <section>
-    <div className="flex h-screen overflow-hidden flex-col lg:flex-row  items-center p-16 bg-[#F7F6F2]">
-      <p>ini home</p>
-    </div>
-</section>
-  )
 }

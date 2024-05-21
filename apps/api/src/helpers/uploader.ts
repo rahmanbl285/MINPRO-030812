@@ -29,5 +29,5 @@ export const uploader = (filePrefix: string, folderName?: string) => {
         }
     })
 
-    return multer({ storage: storage, limits:  { fieldSize: 10 * 1024 * 1024 } })
+    return multer({ storage: storage })
 }
